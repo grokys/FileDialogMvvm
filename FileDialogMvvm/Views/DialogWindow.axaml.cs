@@ -1,27 +1,18 @@
-using Avalonia;
-using Avalonia.Controls;
+using System;
 using Avalonia.Interactivity;
 using Avalonia.Markup.Xaml;
+using Avalonia.ReactiveUI;
 using FileDialogMvvm.ViewModels;
+using ReactiveUI;
 
 namespace FileDialogMvvm.Views
 {
-    public class DialogWindow : Window
+    public class DialogWindow : ReactiveWindow<DialogViewModel>
     {
         public DialogWindow()
         {
             InitializeComponent();
-#if DEBUG
-            this.AttachDevTools();
-#endif
-        }
-
-        private void OkClick(object? sender, RoutedEventArgs e)
-        {
-            // This could also be handled by a command/interaction but putting it in an event handler
-            // for simplicity.
-            var vm = (DialogViewModel)DataContext!;
-            Close("Result was " + vm.Text);
+            this.WhenActivated(d => d(ViewModel.Ok.Subscribe(_ => Close(ViewModel.Text))));
         }
 
         private void InitializeComponent()
