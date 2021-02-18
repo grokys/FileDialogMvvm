@@ -9,23 +9,24 @@ namespace FileDialogMvvm.ViewModels
     {
         public MainWindowViewModel()
         {
-            // The OpenFile command is bound to a button/menu item in the UI.
-            OpenFile = ReactiveCommand.CreateFromTask(OpenFileAsync);
+            // The OpenDialog command is bound to a button/menu item in the UI.
+            OpenDialog = ReactiveCommand.CreateFromTask(OpenDialogAsync);
 
-            // The ShowOpenFileDialog interaction requests the UI to show the file open dialog.
-            ShowOpenFileDialog = new Interaction<Unit, string?>();
+            // The ShowDialog interaction requests the UI to show the dialog.
+            ShowDialog = new Interaction<DialogViewModel, string?>();
         }
 
-        public ReactiveCommand<Unit, Unit> OpenFile { get; }
-        public Interaction<Unit, string?> ShowOpenFileDialog { get; }
+        public ReactiveCommand<Unit, Unit> OpenDialog { get; }
+        public Interaction<DialogViewModel, string?> ShowDialog { get; }
 
-        private async Task OpenFileAsync()
+        private async Task OpenDialogAsync()
         {
-            var fileName = await ShowOpenFileDialog.Handle(Unit.Default);
+            var vm = new DialogViewModel { Text = "Hello Dialog!" };
+            var result = await ShowDialog.Handle(vm);
 
-            if (fileName is object)
+            if (result is object)
             {
-                // Put your logic for opening file here.
+                // Here's the result.
             }
         }
     }

@@ -1,9 +1,5 @@
-using System;
-using System.Linq;
-using System.Reactive;
 using System.Threading.Tasks;
 using Avalonia;
-using Avalonia.Controls;
 using Avalonia.Markup.Xaml;
 using Avalonia.ReactiveUI;
 using FileDialogMvvm.ViewModels;
@@ -20,7 +16,7 @@ namespace FileDialogMvvm.Views
             this.AttachDevTools();
 #endif
             // When the window is activated, registers a handler for the ShowOpenFileDialog interaction.
-            this.WhenActivated(d => d(ViewModel.ShowOpenFileDialog.RegisterHandler(ShowOpenFileDialog)));
+            this.WhenActivated(d => d(ViewModel.ShowDialog.RegisterHandler(ShowDialog)));
         }
 
         private void InitializeComponent()
@@ -28,11 +24,13 @@ namespace FileDialogMvvm.Views
             AvaloniaXamlLoader.Load(this);
         }
 
-        private async Task ShowOpenFileDialog(InteractionContext<Unit, string?> interaction)
+        private async Task ShowDialog(InteractionContext<DialogViewModel, string?> interaction)
         {
-            var dialog = new OpenFileDialog();
-            var fileNames = await dialog.ShowAsync(this);
-            interaction.SetOutput(fileNames.FirstOrDefault());
+            var dialog = new DialogWindow();
+            dialog.DataContext = interaction.Input;
+            
+            var result = await dialog.ShowDialog<string?>(this);
+            interaction.SetOutput(result);
         }
     }
 }

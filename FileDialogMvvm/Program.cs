@@ -16,6 +16,10 @@ namespace FileDialogMvvm
         // Avalonia configuration, don't remove; also used by visual designer.
         public static AppBuilder BuildAvaloniaApp()
             => AppBuilder.Configure<App>()
+                .With(new X11PlatformOptions
+                {
+                    OverlayPopups = true,
+                })
                 .UsePlatformDetect()
                 .LogToTrace()
                 .UseReactiveUI();
